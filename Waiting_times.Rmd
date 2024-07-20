@@ -1,0 +1,125 @@
+---
+title: "Waiting_Times"
+Date: "2023-04-30"
+output: rmarkdown::github_document
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+```{r}
+library(dplyr)
+library(lubridate)
+questions <- read.csv("/Users/pivaldhingra/Desktop/University courses/Datafest 2023/DataFest 2023 Data For Distribution-2023-04-19/data/questions.csv")
+data <- data.frame(questions)
+df <- select(data, "StateAbbr", "AskedOnUtc", "TakenOnUtc")
+```
+
+```{r}
+
+df$AskedOnUtc <- as.POSIXct(df$AskedOnUtc, format = "%Y-%m-%d %H:%M:%OS" )
+df$TakenOnUtc <- as.POSIXct(df$TakenOnUtc, format = "%Y-%m-%d %H:%M:%OS")
+
+df$Year <- format(df$AskedOnUtc, "%Y")
+
+df_filtered <- df %>% 
+  filter(!is.na(TakenOnUtc)) %>% 
+  filter(Year %in% c("2016", "2017", "2018", "2019", "2020", "2021", "2022"))
+
+# Calculate the waiting time for each question
+df_filtered$WaitingTime <- difftime(df_filtered$TakenOnUtc, df_filtered$AskedOnUtc, units = "mins")
+
+# Group the data by state and year, and calculate the average waiting time for each group
+df_summary <- df_filtered %>% 
+  group_by(StateAbbr, Year) %>% 
+  summarize(AvgWaitingTime = mean(WaitingTime))
+
+df_2016 <- df_summary %>% 
+  filter(Year == 2016) %>% 
+  select(StateAbbr, AvgWaitingTime) %>% 
+  group_by(StateAbbr) %>% 
+  summarise(avg_waiting_time = mean(AvgWaitingTime, na.rm = TRUE)) %>% 
+  arrange(desc(avg_waiting_time))
+
+top_5_states <- df_2016 %>% top_n(5, avg_waiting_time)
+
+print(top_5_states)
+```
+
+```{r}
+df_2017 <- df_summary %>% 
+  filter(Year == 2017) %>% 
+  select(StateAbbr, AvgWaitingTime) %>% 
+  group_by(StateAbbr) %>% 
+  summarise(avg_waiting_time = mean(AvgWaitingTime, na.rm = TRUE)) %>% 
+  arrange(desc(avg_waiting_time))
+
+top_5_states <- df_2017 %>% top_n(5, avg_waiting_time)
+
+print(top_5_states)
+```
+
+```{r}
+df_2018 <- df_summary %>% 
+  filter(Year == 2018) %>% 
+  select(StateAbbr, AvgWaitingTime) %>% 
+  group_by(StateAbbr) %>% 
+  summarise(avg_waiting_time = mean(AvgWaitingTime, na.rm = TRUE)) %>% 
+  arrange(desc(avg_waiting_time))
+
+top_5_states <- df_2018 %>% top_n(5, avg_waiting_time)
+
+print(top_5_states)
+```
+
+```{r}
+df_2019 <- df_summary %>% 
+  filter(Year == 2019) %>% 
+  select(StateAbbr, AvgWaitingTime) %>% 
+  group_by(StateAbbr) %>% 
+  summarise(avg_waiting_time = mean(AvgWaitingTime, na.rm = TRUE)) %>% 
+  arrange(desc(avg_waiting_time))
+
+top_5_states <- df_2019 %>% top_n(5, avg_waiting_time)
+
+print(top_5_states)
+```
+
+```{r}
+df_2020 <- df_summary %>% 
+  filter(Year == 2020) %>% 
+  select(StateAbbr, AvgWaitingTime) %>% 
+  group_by(StateAbbr) %>% 
+  summarise(avg_waiting_time = mean(AvgWaitingTime, na.rm = TRUE)) %>% 
+  arrange(desc(avg_waiting_time))
+
+top_5_states <- df_2020 %>% top_n(5, avg_waiting_time)
+print(top_5_states)
+```
+
+```{r}
+df_2021 <- df_summary %>% 
+  filter(Year == 2021) %>% 
+  select(StateAbbr, AvgWaitingTime) %>% 
+  group_by(StateAbbr) %>% 
+  summarise(avg_waiting_time = mean(AvgWaitingTime, na.rm = TRUE)) %>% 
+  arrange(desc(avg_waiting_time))
+
+top_5_states <- df_2021 %>% top_n(5, avg_waiting_time)
+
+print(top_5_states)
+```
+
+```{r}
+df_2022 <- df_summary %>% 
+  filter(Year == 2022) %>% 
+  select(StateAbbr, AvgWaitingTime) %>% 
+  group_by(StateAbbr) %>% 
+  summarise(avg_waiting_time = mean(AvgWaitingTime, na.rm = TRUE)) %>% 
+  arrange(desc(avg_waiting_time))
+
+top_5_states <- df_2022 %>% top_n(5, avg_waiting_time)
+
+print(top_5_states)
+```
+
+
